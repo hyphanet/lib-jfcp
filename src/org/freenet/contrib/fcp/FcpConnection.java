@@ -24,7 +24,8 @@ import org.freenet.contrib.fcp.message.node.NodeMessageBuilder;
 
 /**
  * Responsible for sending data to the node.
- * @author res
+ *
+ * @author Ralph Smithen
  */
 public class FcpConnection {
     private static Logger logger = Logger.getLogger(FcpConnection.class.getName());

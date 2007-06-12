@@ -8,10 +8,10 @@ import java.net.InetSocketAddress;
 
 /**
  *
- * @author res
+ * @author Ralph Smithen
  */
 public class NodeAddress extends InetSocketAddress{
-    public static int DEFAULT_PORT = 9482;
+    public static int DEFAULT_PORT = 9481;
     public static String DEFAULT_HOST = "127.0.0.1";
     
     /** Creates a new instance of NodeAddress */

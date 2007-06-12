@@ -14,8 +14,9 @@ import org.freenet.contrib.fcp.message.client.GenerateSSK;
 import org.freenet.contrib.fcp.message.client.ListPeers;
 
 /**
- *
- * @author res
+ * The main class of the library, start here!
+ * Note that the api may be subject to change.
+ * @author Ralph Smithen
  */
 public class FreenetClient{
     private static String DEFAULT_CLIENT_NAME = "FreenetClient";
@@ -23,34 +24,63 @@ public class FreenetClient{
     private FcpEventSource _eventSource;
     private FcpConnection _conn;
     
+    /**
+     * Creates a new client called "FreenetClient" that will attempt to connect 
+     * to 127.0.0.1:9481.
+     */
     public FreenetClient(){
         this(new NodeAddress(), DEFAULT_CLIENT_NAME);
     }
     
+    /**
+     * Creates a named client that attempts to connect to 127.0.0.1:9481.
+     * @param name the name of the client
+     */
     public FreenetClient(String name){
         this(new NodeAddress(), name);
     }
     
-    /** Creates a new instance of FreenetClient */
+    /**
+     * Creates a new instance of FreenetClient
+     * @param na where to connect
+     * @param name how the client's identified by the node
+     */
     public FreenetClient(NodeAddress na, String name) {
         _eventSupport = new FcpEventSupportRepository();
         _eventSource = new FcpEventSource(_eventSupport);
         _conn = new FcpConnection(na, _eventSupport, name);
     }
     
+    /**
+     * Returns an object by which interested classes can register to listen 
+     * for incoming message events.
+     * @return teh event source
+     */
     public FcpEventSource getEventSource(){
         return _eventSource;
     }
 
     
+    /**
+     * Get the client's connection to manipulate.
+     * @return the conn
+     */
     public FcpConnection getConnection() {
         return _conn;
     }
 
+    /**
+     * Request the peer data from node.
+     */
     public void refreshPeerList(){
         _conn.sendMessage(new ListPeers(true, true));
     }
     
+    /**
+     * Request data from node.
+     * @param uri the key, e.g. CHK@blah
+     * @param id an identifier for use in your app
+     */
     public void get(String uri, String id){
         ClientGet message = new ClientGet(uri, id);
         message.setVerbosity(1);
@@ -58,6 +88,10 @@ public class FreenetClient{
         _conn.sendMessage(message);
     }
     
+    /**
+     * Will probably change
+     * @param id an id for your convenience
+     */
     public void generateSSK(String id){
         _conn.sendMessage(new GenerateSSK(id));
     }

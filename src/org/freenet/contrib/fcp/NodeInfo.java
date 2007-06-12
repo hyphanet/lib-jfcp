@@ -7,8 +7,8 @@ package org.freenet.contrib.fcp;
 import org.freenet.contrib.fcp.message.node.Peer;
 
 /**
- *
- * @author res
+ * Holds data associated with a node or peer.
+ * @author Ralph Smithen
  */
 public class NodeInfo {
     private String _fcpVersion;
@@ -38,6 +38,10 @@ public class NodeInfo {
     public NodeInfo() {
     }
     
+    /**
+     * Instantiates NodeInfo from Peer.
+     * @param p the peer
+     */
     public NodeInfo(Peer p){
         _lastGoodVersion=p.getLastGoodVersion();
         _physicalUdp=p.getPhysicalUdp();
@@ -54,14 +58,26 @@ public class NodeInfo {
         _testNet=p.isTestnet();
     }
     
+    /**
+     * Get the version of FCP for this node.
+     * @return the FCP version
+     */
     public String getFcpVersion() {
         return _fcpVersion;
     }
     
+    /**
+     * Sets teh FCP version
+     * @param fcpVersion the FCP version, e.g. "2.0"
+     */
     public void setFcpVersion(String fcpVersion) {
         this._fcpVersion = fcpVersion;
     }
     
+    /**
+     * Get Fred version
+     * @return the version of Fred
+     */
     public String getVersion() {
         return _version;
     }
