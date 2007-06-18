@@ -54,7 +54,7 @@ public class FreenetClient{
     /**
      * Returns an object by which interested classes can register to listen 
      * for incoming message events.
-     * @return teh event source
+     * @return the event source
      */
     public FcpEventSource getEventSource(){
         return _eventSource;

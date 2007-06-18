@@ -2,14 +2,15 @@
  * Public License, version 2 (or at your option any later version). See
  * http://www.gnu.org/ for further details of the GPL. */
 
-package org.freenet.contrib.fcp.message.node;
+package org.freenet.contrib.fcp.message;
 
 /**
+ *Interface for manipulating a message with a data payload.
  *
- * @author res
+ * @author Ralph Smithen
  */
 public interface DataHoldingMessage {
-    public String getData();
-    public void setData(String data);
+    public byte[] getData();
+    public void setData(byte[] data);
     public int getDataLength();
 }

@@ -7,10 +7,11 @@ package org.freenet.contrib.fcp.event.support;
 import org.freenet.contrib.fcp.listener.FcpConnectionListener;
 import org.freenet.contrib.fcp.listener.FcpPeerListListener;
 import org.freenet.contrib.fcp.listener.FcpQueueListener;
+import org.freenet.contrib.fcp.listener.FcpSSKKeypairListener;
 
 /**
- *
- * @author res
+ * Serves to hide the event-firing functionality.
+ * @author Ralph Smithen
  */
 public class FcpEventSource {
     private FcpEventSupportRepository _repository;
@@ -23,7 +24,7 @@ public class FcpEventSource {
         _repository.getConnectionEventSupport().addListener(l);
     }
     
-    public void removeFcpConnectionListener(FcpConnectionListener l){
+    public void removeConnectionListener(FcpConnectionListener l){
         _repository.getConnectionEventSupport().removeListener(l);
     }
     
@@ -31,8 +32,24 @@ public class FcpEventSource {
         _repository.getPeerListEventSupport().addListener(l);
     }
     
+    public void removePeerListListener(FcpPeerListListener l){
+        _repository.getPeerListEventSupport().removeListener(l);
+    }
+    
     public void addQueueListener(FcpQueueListener l){
         _repository.getQueueEventSupport().addListener(l);
+    }
+    
+    public void removeQueueListener(FcpQueueListener l){
+        _repository.getQueueEventSupport().removeListener(l);
+    }
+    
+    public void addKeypairListener(FcpSSKKeypairListener l){
+        _repository.getSSKKeypairEventSupport().addListener(l);
+    }
+    
+    public void removeKeypairListener(FcpSSKKeypairListener l){
+        _repository.getSSKKeypairEventSupport().removeListener(l);
     }
 
 }

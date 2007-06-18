@@ -7,17 +7,31 @@ package org.freenet.contrib.fcp.message.node;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
+import org.freenet.contrib.fcp.message.DataHoldingMessage;
 
 /**
+ *For a ClientGet with ReturnType=direct, the data is returned directly to the client, 
+ * all at once, using the AllData message. Obviously in many situations this will not be desirable, 
+ * hence the other ReturnType options. Persistent direct requests will not send this 
+ * immediately on completion of the request; see GetRequestStatus.
  *
- * @author res
+ * @author Ralph Smithen
  */
 public class AllData extends NodeMessage implements DataHoldingMessage{
     private String _uri;
-    /** Creates a new instance of DataFound */
+    private byte[] _data;
+    
+    /**
+     * Creates a new instance of AllData
+     */
     public AllData() {
     }
     
+
+    /**
+     * 
+     * @inheritDoc 
+     */
     public void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getQueueEventSupport().fireAllData(this);
     }
@@ -38,12 +52,12 @@ public class AllData extends NodeMessage implements DataHoldingMessage{
         _fields.put("DataLength", String.valueOf(dataLength));
     }
     
-    public String getData() {
-        return _fields.get("Data");
+    public byte[] getData() {
+        return _data;
     }
     
-    public void setData(String data) {
-        _fields.put("Data", data);
+    public void setData(byte[] data) {
+        _data = data;
     }
 
     public String getUri() {

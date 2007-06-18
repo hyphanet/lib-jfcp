@@ -4,9 +4,7 @@
 
 package org.freenet.contrib.fcp;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -14,11 +12,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
+import org.freenet.contrib.fcp.message.FcpMessageInputStream;
 import org.freenet.contrib.fcp.message.MessageBuilderException;
 import org.freenet.contrib.fcp.message.client.ClientHello;
 import org.freenet.contrib.fcp.message.client.ClientMessage;
 import org.freenet.contrib.fcp.message.node.NodeMessage;
-import org.freenet.contrib.fcp.message.node.NodeMessageBuilder;
 
 
 
@@ -35,7 +33,7 @@ public class FcpConnection {
     
     private Socket _socket;
     private PrintStream _out;
-    private BufferedReader _in;
+    private FcpMessageInputStream _mis;
     private NodeAddress _nodeAddress;
     private ExecutorService _messageSender;
     private boolean _socketOpen;
@@ -60,14 +58,16 @@ public class FcpConnection {
      * @throws java.io.IOException on IO error.
      */
     public void open() throws UnknownHostException, IOException{
+        if(_socketOpen)
+            return;
         logger.fine("opening socket to " + _nodeAddress.getHostName() + ":" + _nodeAddress.getPort());
         _socket = new Socket(_nodeAddress.getHostName(), _nodeAddress.getPort());
-        _in = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
+        _mis = new FcpMessageInputStream(_socket.getInputStream());
         _out = new PrintStream(_socket.getOutputStream());
         _messageSender = Executors.newSingleThreadExecutor();
         _messageReaderThread = new MessageReaderThread();
-        _messageReaderThread.start();
         _socketOpen = true;
+        _messageReaderThread.start();
         sendMessage(new ClientHello(_fcpVersion, _clientName));
     }
     
@@ -89,13 +89,13 @@ public class FcpConnection {
             }
             _socket = null;
         }
-        if(_in != null){
+        if(_mis != null){
             try {
-                _in.close();
+                _mis.close();
             } catch (Exception ex) {
                 logger.warning("error closing input stream: " + ex.getMessage());
             }
-            _in = null;
+            _mis = null;
         }
         if(_out != null){
             try {
@@ -109,7 +109,7 @@ public class FcpConnection {
     }
     
     /**
-     * Sends a message to the node.  This method returns immediately, 
+     * Sends a message to the node.  This method returns immediately,
      * the message is put in a queue to be sent.
      * @param message The message to be sent.
      */
@@ -126,7 +126,8 @@ public class FcpConnection {
         }
         
         public void run() {
-//            logger.fine("sending message : " + _message.getHeaderString());
+            if(_out == null)
+                return;
             _message.writeMessage(_out);
             if(_out.checkError()){
                 logger.warning("error sending message:\n\n" + _message.getMessageString());
@@ -160,7 +161,7 @@ public class FcpConnection {
      * @param nodeAddress the new {@link NodeAddress NodeAddress}
      */
     public void setNodeAddress(NodeAddress nodeAddress) {
-        this._nodeAddress = nodeAddress;
+        _nodeAddress = nodeAddress;
     }
     
     
@@ -173,20 +174,18 @@ public class FcpConnection {
             try {
                 
                 while(_socketOpen){
-                    NodeMessageBuilder builder = new NodeMessageBuilder();
                     try {
-                        builder.parse(_in);
-                        NodeMessage message = builder.build();
+                        NodeMessage message = _mis.readMessage();
                         message.fireEvents(_eventSupport);
                     } catch (MessageBuilderException ex) {
                         if(_socketOpen)
                             logger.warning("error building node message: " + ex.getMessage());
                     }
-                    
                 }
                 
             } catch (IOException ex) {
-                logger.warning("error reading stream: " + ex.getMessage());
+                if(_socketOpen)
+                    logger.warning("error reading stream: " + ex.getMessage());
             }
             
             _running = false;

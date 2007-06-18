@@ -7,10 +7,10 @@ package org.freenet.contrib.fcp.message.node;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
- * This is a message of the Freenet Client Protocol 2.0 (FCP 2.0).
- * It is sent from the Freenet node to a client program in response to the client 
- * issuing a GenerateSSK command.
- * @author res
+ * This is sent from the Freenet node to a client program in response to the client 
+ * issuing a {@link org.freenet.contrib.fcp.message.client.GenerateSSK GenerateSSK} command.
+ *
+ * @author Ralph Smithen
  */
 public class SSKKeypair extends NodeMessage{
     
@@ -23,7 +23,7 @@ public class SSKKeypair extends NodeMessage{
      * @inheritDoc 
      */
     public void fireEvents(FcpEventSupportRepository eventSupport) {
-        
+        eventSupport.getSSKKeypairEventSupport().fireKeypairReceived(this);
     }
 
     public String getId() {

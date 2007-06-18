@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
- * @author res
+ * Support class to allow event support to be achieved more tersely.
+ * @author Ralph Smithen
  */
 class AbstractFcpEventSupport<ListenerType> {
     Set<ListenerType> _listeners = Collections.synchronizedSet(new HashSet());

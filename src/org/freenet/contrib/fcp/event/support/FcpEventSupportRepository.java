@@ -5,14 +5,15 @@
 package org.freenet.contrib.fcp.event.support;
 
 /**
- *
- * @author res
+ * Holds references to all the client's event sources.
+ * @author Ralph Smithen
  */
 public class FcpEventSupportRepository {
     
    private FcpConnectionEventSupport _connectionEventSupport = new FcpConnectionEventSupport();
    private FcpPeerListEventSupport _peerListEventSupport = new FcpPeerListEventSupport();
    private FcpQueueEventSupport _queueEventSupport = new FcpQueueEventSupport();
+   private FcpSSKKeypairEventSupport _keypairEventSupport = new FcpSSKKeypairEventSupport();
 
     public FcpConnectionEventSupport getConnectionEventSupport() {
         return _connectionEventSupport;
@@ -24,6 +25,10 @@ public class FcpEventSupportRepository {
 
     public FcpQueueEventSupport getQueueEventSupport() {
         return _queueEventSupport;
+    }
+
+    public FcpSSKKeypairEventSupport getSSKKeypairEventSupport() {
+        return _keypairEventSupport;
     }
     
 }
