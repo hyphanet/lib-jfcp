@@ -7,8 +7,10 @@ package org.freenet.contrib.fcp.message.client;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
+ * This asks the node to generate us an SSK keypair. 
+ * The response will come back in a {@link org.freenet.contrib.fcp.message.node.SSKKeypair SSKKeypair} message.
  *
- * @author res
+ * @author Ralph Smithen
  */
 public class GenerateSSK extends ClientMessage{
     

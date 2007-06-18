@@ -4,27 +4,16 @@
 
 package org.freenet.contrib.fcp.message.client;
 
-import java.io.PrintStream;
-import java.net.FileNameMap;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
+import org.freenet.contrib.fcp.message.Persistence;
+import org.freenet.contrib.fcp.message.ReturnType;
 
 /**
+ *This is sent from a client program to the Freenet node and is used to specify a file to download from Freenet.
  *
- * @author res
+ * @author Ralph Smithen
  */
 public class ClientGet extends ClientMessage{
-    public enum ReturnType{
-        direct,
-        disk,
-        none
-    }
-    
-    public enum Persistence{
-        connection,
-        reboot,
-        forever
-    }
-    
     
     public ClientGet(String uri, String identifier){
         setUri(uri);
@@ -136,6 +125,14 @@ public class ClientGet extends ClientMessage{
         _fields.put("Global", String.valueOf(global));
     }
     
+    public boolean isBlob() {
+        return Boolean.parseBoolean(_fields.get("BinaryBlob"));
+    }
+    
+    public void setBlob(boolean blob) {
+        _fields.put("BinaryBlob", String.valueOf(blob));
+    }
+    
     public ReturnType getReturnType() {
         return ReturnType.valueOf(_fields.get("ReturnType"));
     }
@@ -144,6 +141,7 @@ public class ClientGet extends ClientMessage{
         _fields.put("ReturnType", returnType.toString());
     }
     
+    // Only valid if ReturnType is disk
     
     public String getFileName() {
         return _fields.get("FileName");

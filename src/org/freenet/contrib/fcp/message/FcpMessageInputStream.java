@@ -8,7 +8,6 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.freenet.contrib.fcp.message.DataHoldingMessage;
 import org.freenet.contrib.fcp.message.node.NodeMessage;
 
 /**
@@ -43,8 +42,8 @@ public class FcpMessageInputStream {
             }
             sb.append((char) b);
         }
-        String line = sb.toString();
-        return line.trim().length() == 0 ? readLine() : line;
+        String line = sb.toString(); 
+        return line.trim().length() == 0 ? readLine() : line; // blank lines allowed for debugging - if so, read on
     }
     
     /**
@@ -65,15 +64,7 @@ public class FcpMessageInputStream {
         while(readField(m))
             ; // read all message fields
         
-        String[] mandatoryFields = m.getMandatoryFields();
-        
-        for(String field : mandatoryFields){
-            
-            if(m.getFields().get(field) == null)
-                throw new MessageBuilderException(
-                        "mandatory field " + field + " not found in message " + 
-                        m.getHeaderString());
-        }
+        m.validate();
         
         return m;
     }
@@ -99,12 +90,15 @@ public class FcpMessageInputStream {
         DataHoldingMessage dhm = (DataHoldingMessage) m;
         
         byte[] data = new byte[dhm.getDataLength()];
-        _dis.read(data, 0, data.length);
-        
+        int toRead = data.length, read;
+        while(toRead > 0){
+            read = _dis.read(data, data.length - toRead, toRead > 4096 ? 4096 : toRead);
+            toRead -= read;
+        }
         dhm.setData(data);
         return false;
     }
-
+    
     /**
      * Closes the delegate stream.
      * @throws java.io.IOException if thrown on underlying stream

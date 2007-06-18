@@ -5,16 +5,17 @@
 package org.freenet.contrib.fcp.event;
 
 import org.freenet.contrib.fcp.message.node.SSKKeypair;
+import org.freenet.contrib.fcp.message.node.URIGenerated;
 
 /**
  *
  * @author Ralph Smithen
  */
-public class SSKKeypairEvent extends FcpEvent<SSKKeypair>{
+public class URIGeneratedEvent extends FcpEvent<URIGenerated>{
     
-    /** Creates a new instance of SSKKeypairEvent */
-    public SSKKeypairEvent(SSKKeypair kp) {
-        super(kp);
+    /** Creates a new instance of URIGeneratedEvent */
+    public URIGeneratedEvent(URIGenerated ug) {
+        super(ug);
     }
     
 }

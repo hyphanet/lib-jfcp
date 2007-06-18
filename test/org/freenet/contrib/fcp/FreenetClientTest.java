@@ -8,7 +8,6 @@
 package org.freenet.contrib.fcp;
 
 import java.util.Map;
-import java.util.logging.Logger;
 import junit.framework.*;
 import org.freenet.contrib.fcp.event.AllDataEvent;
 import org.freenet.contrib.fcp.event.DataFoundEvent;
@@ -19,12 +18,21 @@ import org.freenet.contrib.fcp.event.FcpPeerListUpdatedEvent;
 import org.freenet.contrib.fcp.event.FcpSimpleProgressEvent;
 import org.freenet.contrib.fcp.event.GetFailedEvent;
 import org.freenet.contrib.fcp.event.SSKKeypairEvent;
+import org.freenet.contrib.fcp.event.URIGeneratedEvent;
 import org.freenet.contrib.fcp.event.support.FcpEventSource;
 import org.freenet.contrib.fcp.listener.FcpConnectionListener;
 import org.freenet.contrib.fcp.listener.FcpPeerListListener;
 import org.freenet.contrib.fcp.listener.FcpQueueListener;
 import org.freenet.contrib.fcp.listener.FcpSSKKeypairListener;
 import org.freenet.contrib.fcp.message.node.Peer;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
+import org.freenet.contrib.fcp.message.client.ClientGet;
+import org.freenet.contrib.fcp.message.client.ClientMessage;
+import org.freenet.contrib.fcp.message.client.ClientPut;
+import org.freenet.contrib.fcp.message.client.GenerateSSK;
+import org.freenet.contrib.fcp.message.client.ListPeers;
 
 /**
  *
@@ -118,6 +126,21 @@ public class FreenetClientTest extends TestCase
         
     }
     
+    /**
+     * Test of put method, of class org.freenet.contrib.fcp.FreenetClient.
+     */
+    public void testPut() {
+        System.out.println("put");
+        
+        String uri = "CHK@";
+        String id = "mytestput";
+        byte[] data = "I'm but a wee snippet.".getBytes();
+
+        instance.put(uri, id, data);
+        
+        myWait();
+    }
+    
     public void peerListUpdated(FcpPeerListUpdatedEvent e) {
         System.out.println("peerListUpdated, peer list:");
         for(Map.Entry<String, Peer> entry : e.getPeers().entrySet()){
@@ -138,6 +161,7 @@ public class FreenetClientTest extends TestCase
     
     public void simpleProgressUpdate(FcpSimpleProgressEvent e) {
         System.out.println("simpleProgressUpdate");
+        System.out.println("  id=" + e.getMessage().getId());
     }
     
     public void keyRequested(FcpKeyRequestedEvent e) {
@@ -150,7 +174,8 @@ public class FreenetClientTest extends TestCase
     
     public void allData(AllDataEvent e) {
         System.out.println("allData");
-        System.out.println(new String(e.getMessage().getData()));
+        //System.out.println(new String(e.getMessage().getData()));
+        System.out.println("  bytes=" + e.getMessage().getDataLength());
         synchronized(this){
             notify();
         }
@@ -170,6 +195,17 @@ public class FreenetClientTest extends TestCase
         System.out.println("  insert=" + kpe.getMessage().getInsertURI());
         System.out.println("  request=" + kpe.getMessage().getRequestURI());
         
+        
+        synchronized(this){
+            notify();
+        }
+    }
+
+
+    public void uriGenerated(URIGeneratedEvent uge) {
+        System.out.println("uriGenerated");
+        System.out.println("  id=" + uge.getMessage().getId());
+        System.out.println("  uri=" + uge.getMessage().getUri());
         
         synchronized(this){
             notify();

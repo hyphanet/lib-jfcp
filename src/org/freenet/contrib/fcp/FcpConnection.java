@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 import org.freenet.contrib.fcp.message.FcpMessageInputStream;
+import org.freenet.contrib.fcp.message.FcpMessageOutputStream;
 import org.freenet.contrib.fcp.message.MessageBuilderException;
 import org.freenet.contrib.fcp.message.client.ClientHello;
 import org.freenet.contrib.fcp.message.client.ClientMessage;
@@ -31,14 +32,14 @@ public class FcpConnection {
     private String _fcpVersion = "2.0";
     private String _clientName = "FreenetClient";
     
-    private Socket _socket;
-    private PrintStream _out;
-    private FcpMessageInputStream _mis;
-    private NodeAddress _nodeAddress;
-    private ExecutorService _messageSender;
-    private boolean _socketOpen;
-    private MessageReaderThread _messageReaderThread;
-    private FcpEventSupportRepository _eventSupport;
+    private Socket                      _socket;
+    private FcpMessageOutputStream      _mos;
+    private FcpMessageInputStream       _mis;
+    private NodeAddress                 _nodeAddress;
+    private ExecutorService             _messageSender;
+    private MessageReaderThread         _messageReaderThread;
+    private FcpEventSupportRepository   _eventSupport;
+    private boolean                     _socketOpen;
     
     /** Creates a new instance of FcpConnection */
     FcpConnection(NodeAddress na, FcpEventSupportRepository eventSupport) {
@@ -63,7 +64,7 @@ public class FcpConnection {
         logger.fine("opening socket to " + _nodeAddress.getHostName() + ":" + _nodeAddress.getPort());
         _socket = new Socket(_nodeAddress.getHostName(), _nodeAddress.getPort());
         _mis = new FcpMessageInputStream(_socket.getInputStream());
-        _out = new PrintStream(_socket.getOutputStream());
+        _mos = new FcpMessageOutputStream(_socket.getOutputStream());
         _messageSender = Executors.newSingleThreadExecutor();
         _messageReaderThread = new MessageReaderThread();
         _socketOpen = true;
@@ -97,13 +98,13 @@ public class FcpConnection {
             }
             _mis = null;
         }
-        if(_out != null){
+        if(_mos != null){
             try {
-                _out.close();
+                _mos.close();
             } catch (Exception ex) {
                 logger.warning("error closing output stream: " + ex.getMessage());
             }
-            _out = null;
+            _mos = null;
         }
         _eventSupport.getConnectionEventSupport().fireFcpDisconnected();
     }
@@ -126,14 +127,17 @@ public class FcpConnection {
         }
         
         public void run() {
-            if(_out == null)
+            if(_mos == null)
                 return;
-            _message.writeMessage(_out);
-            if(_out.checkError()){
-                logger.warning("error sending message:\n\n" + _message.getMessageString());
-                close();
-            }else{
+            try {
+                _mos.writeMessage(_message);
+                _mos.flush();
                 _message.fireEvents(_eventSupport);
+            } catch (IOException ex) {
+                logger.warning("IO error sending message: " + _message.getHeaderString());
+                close();
+            } catch (MessageBuilderException ex) {
+                logger.warning("invalid message:\n\n" + _message.getMessageString() + "\n\n");
             }
         }
     }
@@ -165,36 +169,23 @@ public class FcpConnection {
     }
     
     
-    private class MessageReaderThread extends Thread{
-        private boolean _running;
-        
+    private class MessageReaderThread extends Thread{        
         public void run(){
-            _running = true;
-            String line;
             try {
-                
                 while(_socketOpen){
                     try {
                         NodeMessage message = _mis.readMessage();
                         message.fireEvents(_eventSupport);
                     } catch (MessageBuilderException ex) {
-                        if(_socketOpen)
                             logger.warning("error building node message: " + ex.getMessage());
                     }
                 }
-                
             } catch (IOException ex) {
                 if(_socketOpen)
                     logger.warning("error reading stream: " + ex.getMessage());
             }
-            
-            _running = false;
             if(_socketOpen)
                 close();
-        }
-        
-        public boolean isRunning() {
-            return _running;
         }
         
     }

@@ -7,8 +7,9 @@ package org.freenet.contrib.fcp.message.client;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
+ *This message asks the Freenet node for a list of other Freenet nodes connected directly to you (peers).
  *
- * @author res
+ * @author Ralph Smithen
  */
 public class ListPeers extends ClientMessage{
     

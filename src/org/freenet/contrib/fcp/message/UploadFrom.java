@@ -2,15 +2,14 @@
  * Public License, version 2 (or at your option any later version). See
  * http://www.gnu.org/ for further details of the GPL. */
 
-package org.freenet.contrib.fcp.message.client;
-
-import org.freenet.contrib.fcp.message.FcpMessage;
+package org.freenet.contrib.fcp.message;
 
 /**
- *All client messages inherit from this.
  *
  * @author Ralph Smithen
  */
-public abstract class ClientMessage extends FcpMessage{
-    
+public enum UploadFrom{
+    direct,
+    disk,
+    redirect
 }

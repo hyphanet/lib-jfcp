@@ -8,8 +8,10 @@ import java.io.PrintStream;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
+ *This must be the first message from the client on any given connection. 
+ * The node will respond with a {@link org.freenet.contrib.fcp.message.node.NodeHello NodeHello} message.
  *
- * @author res
+ * @author Ralph Smithen
  */
 public class ClientHello extends ClientMessage{
     

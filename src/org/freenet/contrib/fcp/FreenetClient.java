@@ -10,6 +10,7 @@ import org.freenet.contrib.fcp.event.support.FcpEventSource;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 import org.freenet.contrib.fcp.message.client.ClientGet;
 import org.freenet.contrib.fcp.message.client.ClientMessage;
+import org.freenet.contrib.fcp.message.client.ClientPut;
 import org.freenet.contrib.fcp.message.client.GenerateSSK;
 import org.freenet.contrib.fcp.message.client.ListPeers;
 
@@ -82,10 +83,24 @@ public class FreenetClient{
      * @param id an identifier for use in your app
      */
     public void get(String uri, String id){
-        ClientGet message = new ClientGet(uri, id);
-        message.setVerbosity(1);
-        message.setPriority(2);
-        _conn.sendMessage(message);
+        ClientGet cg = new ClientGet(uri, id);
+        cg.setVerbosity(1);
+        cg.setPriority(2);
+        _conn.sendMessage(cg);
+    }
+    
+    
+    /**
+     * Inserts data to node.
+     * @param uri 
+     * @param id 
+     * @param data 
+     */
+    public void put(String uri, String id, byte[] data){
+        ClientPut cp = new ClientPut(uri, id, data);
+        cp.setVerbosity(1);
+        cp.setPriority(2);
+        _conn.sendMessage(cp);
     }
     
     /**

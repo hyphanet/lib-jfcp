@@ -5,6 +5,7 @@
 package org.freenet.contrib.fcp.listener;
 
 import org.freenet.contrib.fcp.event.SSKKeypairEvent;
+import org.freenet.contrib.fcp.event.URIGeneratedEvent;
 
 /**
  *
@@ -12,4 +13,5 @@ import org.freenet.contrib.fcp.event.SSKKeypairEvent;
  */
 public interface FcpSSKKeypairListener {
     public void keypairReceived(SSKKeypairEvent kpe);
+    public void uriGenerated(URIGeneratedEvent uge);
 }
