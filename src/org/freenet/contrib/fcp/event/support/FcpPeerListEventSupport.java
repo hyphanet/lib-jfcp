@@ -4,23 +4,34 @@
 
 package org.freenet.contrib.fcp.event.support;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import org.freenet.contrib.fcp.NodeInfo;
 import org.freenet.contrib.fcp.event.FcpPeerListUpdatedEvent;
+import org.freenet.contrib.fcp.event.FcpPeerNotesUpdatedEvent;
 import org.freenet.contrib.fcp.event.support.AbstractFcpEventSupport.NotifyHelper;
 import org.freenet.contrib.fcp.listener.FcpPeerListListener;
+import org.freenet.contrib.fcp.message.client.ListPeerNotes;
+import org.freenet.contrib.fcp.message.node.EndListPeerNotes;
 import org.freenet.contrib.fcp.message.node.Peer;
+import org.freenet.contrib.fcp.message.node.PeerNote;
 
 /**
  *
- * @author res
+ * @author Ralph Smithen
  */
 public class FcpPeerListEventSupport extends AbstractFcpEventSupport<FcpPeerListListener>{
     private Map<String, Peer> _peers;
+    private Map<String, Vector<PeerNote>> _peerNotes = Collections.synchronizedMap(new HashMap());
     
     NotifyHelper _peerListUpdatedNotifier = new NotifyHelper<FcpPeerListUpdatedEvent>() {
         void notifyListener(FcpPeerListListener l, FcpPeerListUpdatedEvent e) {l.peerListUpdated(e);}
+    };
+    
+    NotifyHelper _peerNotesUpdatedNotifier = new NotifyHelper<FcpPeerNotesUpdatedEvent>() {
+        void notifyListener(FcpPeerListListener l, FcpPeerNotesUpdatedEvent e) {l.peerNotesUpdated(e);}
     };
 
     
@@ -35,4 +46,21 @@ public class FcpPeerListEventSupport extends AbstractFcpEventSupport<FcpPeerList
     public void firePeerListUpdated(){
         _peerListUpdatedNotifier.notifyListeners(new FcpPeerListUpdatedEvent(_peers));
     }
+    
+    public void firePeerNote(PeerNote pn){
+        synchronized(_peerNotes){
+            _peerNotes.get(pn.getNodeId()).add(pn);
+        }
+    }
+    
+    public void firePeerNotesRequested(ListPeerNotes lpn){
+        _peerNotes.put(lpn.getNodeId(), new Vector());
+    }
+    
+    public void firePeerNotesUpdated(EndListPeerNotes elpn){
+         _peerNotesUpdatedNotifier.notifyListeners(
+                 new FcpPeerNotesUpdatedEvent(elpn, _peerNotes.get(elpn.getNodeId())));
+    }
+    
+    
 }

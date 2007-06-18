@@ -5,14 +5,15 @@
 package org.freenet.contrib.fcp.listener;
 
 import org.freenet.contrib.fcp.event.FcpPeerListUpdatedEvent;
+import org.freenet.contrib.fcp.event.FcpPeerNotesUpdatedEvent;
 
 /**
  *
- * @author res
+ * @author Ralph Smithen
  */
 public interface FcpPeerListListener {
 
     public void peerListUpdated(FcpPeerListUpdatedEvent e);
     
-    
+    public void peerNotesUpdated(FcpPeerNotesUpdatedEvent e);
 }

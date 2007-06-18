@@ -12,6 +12,7 @@ import org.freenet.contrib.fcp.message.client.ClientGet;
 import org.freenet.contrib.fcp.message.client.ClientMessage;
 import org.freenet.contrib.fcp.message.client.ClientPut;
 import org.freenet.contrib.fcp.message.client.GenerateSSK;
+import org.freenet.contrib.fcp.message.client.ListPeerNotes;
 import org.freenet.contrib.fcp.message.client.ListPeers;
 
 /**
@@ -75,6 +76,13 @@ public class FreenetClient{
      */
     public void refreshPeerList(){
         _conn.sendMessage(new ListPeers(true, true));
+    }
+    
+    /**
+     * Request peer notes from node.
+     */
+    public void listPeerNotes(String peer){
+        _conn.sendMessage(new ListPeerNotes(peer));
     }
     
     /**

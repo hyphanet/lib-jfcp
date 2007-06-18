@@ -15,6 +15,7 @@ import org.freenet.contrib.fcp.event.FcpConnectEvent;
 import org.freenet.contrib.fcp.event.FcpDisconnectEvent;
 import org.freenet.contrib.fcp.event.FcpKeyRequestedEvent;
 import org.freenet.contrib.fcp.event.FcpPeerListUpdatedEvent;
+import org.freenet.contrib.fcp.event.FcpPeerNotesUpdatedEvent;
 import org.freenet.contrib.fcp.event.FcpSimpleProgressEvent;
 import org.freenet.contrib.fcp.event.GetFailedEvent;
 import org.freenet.contrib.fcp.event.SSKKeypairEvent;
@@ -33,6 +34,8 @@ import org.freenet.contrib.fcp.message.client.ClientMessage;
 import org.freenet.contrib.fcp.message.client.ClientPut;
 import org.freenet.contrib.fcp.message.client.GenerateSSK;
 import org.freenet.contrib.fcp.message.client.ListPeers;
+import org.freenet.contrib.fcp.message.client.ListPeerNotes;
+import org.freenet.contrib.fcp.message.node.PeerNote;
 
 /**
  *
@@ -100,6 +103,19 @@ public class FreenetClientTest extends TestCase
     }
     
     /**
+     * Test of listPeerNotes method, of class org.freenet.contrib.fcp.FreenetClient.
+     */
+    public void testListPeerNotes() {
+        System.out.println("listPeerNotes");
+        
+        String peer = "Toad/Dark";
+        
+        instance.listPeerNotes(peer);
+        
+        myWait();
+    }
+    
+    /**
      * Test of get method, of class org.freenet.contrib.fcp.FreenetClient.
      */
     public void testGet() {
@@ -135,7 +151,7 @@ public class FreenetClientTest extends TestCase
         String uri = "CHK@";
         String id = "mytestput";
         byte[] data = "I'm but a wee snippet.".getBytes();
-
+        
         instance.put(uri, id, data);
         
         myWait();
@@ -200,13 +216,26 @@ public class FreenetClientTest extends TestCase
             notify();
         }
     }
-
-
+    
+    
     public void uriGenerated(URIGeneratedEvent uge) {
         System.out.println("uriGenerated");
         System.out.println("  id=" + uge.getMessage().getId());
         System.out.println("  uri=" + uge.getMessage().getUri());
         
+        synchronized(this){
+            notify();
+        }
+    }
+    
+    public void peerNotesUpdated(FcpPeerNotesUpdatedEvent e) {
+        System.out.println("peerNotesUpdated");
+        System.out.println("  node id=" + e.getMessage().getNodeId());
+        for(PeerNote pn : e.getPeerNotes()){
+            System.out.println("peerNote");
+            System.out.println("  type=" + pn.getNoteType());
+            System.out.println("  text=" + pn.getNoteText());
+        }
         synchronized(this){
             notify();
         }

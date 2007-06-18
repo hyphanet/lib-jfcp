@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author res
+ * @author Ralph Smithen
  */
 abstract class FcpEvent<MessageType> {
     protected Date timeStamp = new Date();
