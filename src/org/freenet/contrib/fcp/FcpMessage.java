@@ -2,7 +2,7 @@
  * Public License, version 2 (or at your option any later version). See
  * http://www.gnu.org/ for further details of the GPL. */
 
-package org.freenet.contrib.fcp.message;
+package org.freenet.contrib.fcp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
+import org.freenet.contrib.fcp.message.*;
 
 /**
  * The superclass of all FCP messages.
@@ -52,7 +53,7 @@ public abstract class FcpMessage {
      * Trigger the events upon receipt or transmission of a message.
      * @param eventSupport the object to be notified of message events
      */
-    public abstract void fireEvents(FcpEventSupportRepository eventSupport);
+    protected abstract void fireEvents(FcpEventSupportRepository eventSupport);
     
     /**
      * Get the fields that must be non-null in a valid message.
@@ -72,28 +73,5 @@ public abstract class FcpMessage {
             if(_fields.get(field) == null)
                 throw new MessageBuilderException("mandatory field " + field + " not found in message " + _headerString);
         }
-    }
-    
-    /**
-     * Stream the message.
-     * @param out the stream to be written to
-     */
-    public void writeMessage(PrintStream out){
-        out.println(_headerString);
-        for(Map.Entry entry : _fields.entrySet()){
-            out.println(entry.getKey() + "=" + entry.getValue());
-        }
-        out.println("EndMessage");
-    }
-    
-    
-    /**
-     * Get the text representation of the message.
-     * @return a <code>String</code> of the message's FCP representation
-     */
-    public String getMessageString(){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        writeMessage(new PrintStream(baos));
-        return baos.toString();
     }
 }

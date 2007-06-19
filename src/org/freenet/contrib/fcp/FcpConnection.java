@@ -137,7 +137,7 @@ public class FcpConnection {
                 logger.warning("IO error sending message: " + _message.getHeaderString());
                 close();
             } catch (MessageBuilderException ex) {
-                logger.warning("invalid message:\n\n" + _message.getMessageString() + "\n\n");
+                logger.warning("invalid message:\n\n" + _message.getHeaderString() + "\n\n");
             }
         }
     }

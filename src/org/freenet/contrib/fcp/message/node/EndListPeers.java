@@ -7,12 +7,16 @@ package org.freenet.contrib.fcp.message.node;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
- *
- * @author res
+ *This indicates the end of a list of {@link Peer Peer} messages that have been sent in response to a 
+ * {@link org.freenet.contrib.fcp.message.client.ListPeers ListPeers} message.
+ * @author Ralph Smithen
  */
 public class EndListPeers extends NodeMessage{
 
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    /**
+     * @inheritDoc 
+     */
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getPeerListEventSupport().firePeerListUpdated();
     }
 

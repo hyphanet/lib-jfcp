@@ -5,7 +5,7 @@
 package org.freenet.contrib.fcp.message.node;
 
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
-import org.freenet.contrib.fcp.message.FcpMessage;
+import org.freenet.contrib.fcp.FcpMessage;
 
 /**
  *All node messages are a subclass of this.

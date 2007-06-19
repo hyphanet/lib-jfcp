@@ -16,7 +16,10 @@ public class PeerNote extends NodeMessage{
     public PeerNote(){
     }
     
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    /**
+     * @inheritDoc 
+     */
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getPeerListEventSupport().firePeerNote(this);
     }
 

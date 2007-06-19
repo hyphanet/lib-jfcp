@@ -16,7 +16,10 @@ import org.freenet.contrib.fcp.message.UploadFrom;
  */
 public class PersistentPut extends NodeMessage{
     
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    /**
+     * @inheritDoc 
+     */
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         
     }
 

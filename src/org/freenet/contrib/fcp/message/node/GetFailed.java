@@ -8,11 +8,17 @@ import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
  *
- * @author res
+ * <p>It indicates a freenet retrieval has failed.</p>
+ * <p>Complex <code>GetFailed</code>s are also possible; the format is identical to that of a 
+ * {@link PutFailed PutFailed}.</p>
+ * @author Ralph Smithen
  */
 public class GetFailed extends NodeMessage{
 
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    /**
+     * @inheritDoc 
+     */
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getQueueEventSupport().fireGetFailed(this);
     }
 

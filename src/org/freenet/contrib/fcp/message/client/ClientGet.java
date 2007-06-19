@@ -24,7 +24,7 @@ public class ClientGet extends ClientMessage{
         return new String[] { "URI", "Identifier" };
     }
 
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getQueueEventSupport().fireKeyRequested(this);
     }
     

@@ -39,7 +39,7 @@ public class ListPeers extends ClientMessage{
         _fields.put("WithVolatile", String.valueOf(withVolatile));
     }     
     
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getPeerListEventSupport().firePeerListRequested();
     }   
 }

@@ -26,7 +26,7 @@ public class ListPeerNotes extends ClientMessage{
         return _fields.get("NodeIdentifier");
     }
 
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getPeerListEventSupport().firePeerNotesRequested(this);
     }
  

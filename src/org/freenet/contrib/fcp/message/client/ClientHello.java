@@ -40,7 +40,7 @@ public class ClientHello extends ClientMessage{
         _fields.put("ExpectedVersion", expectedVersion);
     }
 
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
     }
     
 }

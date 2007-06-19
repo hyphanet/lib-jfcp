@@ -7,7 +7,7 @@ package org.freenet.contrib.fcp.event;
 import java.util.Map;
 import org.freenet.contrib.fcp.NodeInfo;
 import org.freenet.contrib.fcp.message.node.Peer;
-import org.freenet.contrib.fcp.message.node.PeerMetaData;
+import org.freenet.contrib.fcp.peer.PeerMetaData;
 
 /**
  *

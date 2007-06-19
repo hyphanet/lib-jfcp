@@ -20,7 +20,7 @@ public class NodeHello extends NodeMessage{
      * 
      * @inheritDoc 
      */
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getConnectionEventSupport().fireFcpConnected(this);
     }
     

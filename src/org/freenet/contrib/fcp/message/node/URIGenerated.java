@@ -26,10 +26,9 @@ public class URIGenerated extends NodeMessage{
     }
     
     /**
-     * 
      * @inheritDoc 
      */
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getSSKKeypairEventSupport().fireURIGenerated(this);
     }
     

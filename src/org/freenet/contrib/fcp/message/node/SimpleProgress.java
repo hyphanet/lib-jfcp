@@ -7,12 +7,28 @@ package org.freenet.contrib.fcp.message.node;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
- *
- * @author res
+ * <p>This indicates the progress of a large request 
+ * (usually a splitfile, a big file which is split across a large number of blocks).</p>
+ * 
+ * <p>
+ * Note that before FinalizedTotal=true, Total may vary wildly on a 
+ * {@link org.freenet.contrib.fcp.message.client.ClientGet ClientGet}, 
+ * because we may follow redirects, have to fetch multi-level splitfiles and so on. 
+ * However, once we are fetching the final splitfile, FinalizedTotal will be set to 
+ * true. Whereas on a {@link org.freenet.contrib.fcp.message.client.ClientPut ClientPut}, 
+ * we can't generate the metadata until quite late on, so it takes a long time to set 
+ * FinalizedTotal=true, but this doesn't matter as the Total will not increase very much 
+ * (since the majority of the insert is the actual data and check blocks).
+ * </p>
+ * @author Ralph Smithen
  */
 public class SimpleProgress extends NodeMessage{
     
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    /**
+     * 
+     * @inheritDoc 
+     */
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getQueueEventSupport().fireSimpleProgressUpdate(this);
     }
 

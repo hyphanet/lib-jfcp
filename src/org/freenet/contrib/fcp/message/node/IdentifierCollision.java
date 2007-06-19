@@ -7,13 +7,17 @@ package org.freenet.contrib.fcp.message.node;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
- *
- * @author res
+ * This happens when a client tries to reuse an Identifier. Identifiers are unique to the specific request. 
+ * They can be reused after that request has completed and removed from the queue.
+ * @author Ralph Smithen
  */
 public class IdentifierCollision extends NodeMessage{
 
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
-        
+    /**
+     * @inheritDoc 
+     */
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
+        // @todo: notify who?
     }
 
     public String getId() {

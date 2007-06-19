@@ -17,7 +17,7 @@ public class ShutDown extends ClientMessage{
     public ShutDown() {
     }
 
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
     }
     
 }

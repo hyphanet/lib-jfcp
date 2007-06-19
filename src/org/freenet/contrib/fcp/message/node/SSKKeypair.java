@@ -22,7 +22,7 @@ public class SSKKeypair extends NodeMessage{
      * 
      * @inheritDoc 
      */
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getSSKKeypairEventSupport().fireKeypairReceived(this);
     }
 

@@ -7,7 +7,7 @@ package org.freenet.contrib.fcp.message.client;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
- *This message lists the peer notes for a given peer of your Freenet node.
+ *This message modifies a peer note for a given peer of your Freenet node.
  *
  * @author Ralph Smithen
  */
@@ -43,7 +43,7 @@ public class ModifyPeerNote extends ClientMessage{
         return _fields.get("NoteText");
     }
 
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
     }
  
 }

@@ -6,10 +6,12 @@ package org.freenet.contrib.fcp.message.node;
 
 import org.freenet.contrib.fcp.NodeInfo;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
+import org.freenet.contrib.fcp.peer.PeerMetaData;
+import org.freenet.contrib.fcp.peer.PeerVolatileData;
 
 /**
- *
- * @author res
+ *This gives the details of a Freenet node that is directly connected to your node (a peer or friend).
+ * @author Ralph Smithen
  */
 public class Peer extends NodeMessage{
     private PeerMetaData peerMetaData;
@@ -20,7 +22,10 @@ public class Peer extends NodeMessage{
         peerVolatileData = new PeerVolatileData(this);
     }
     
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    /**
+     * @inheritDoc 
+     */
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getPeerListEventSupport().firePeerUpdated(this);
     }
 

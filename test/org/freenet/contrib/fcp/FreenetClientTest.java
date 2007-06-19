@@ -50,7 +50,7 @@ public class FreenetClientTest extends TestCase
     
     protected void setUp() throws Exception {
         System.out.println("setUp");
-        instance = new FreenetClient(new NodeAddress(9482), "FreenetClientTests");
+        instance = new FreenetClient(new NodeAddress(FcpSuite.PORT), "FreenetClientTests");
         instance.getEventSource().addPeerListListener(this);
         instance.getEventSource().addConnectionListener(this);
         instance.getEventSource().addQueueListener(this);
@@ -158,9 +158,10 @@ public class FreenetClientTest extends TestCase
     }
     
     public void peerListUpdated(FcpPeerListUpdatedEvent e) {
-        System.out.println("peerListUpdated, peer list:");
+        System.out.println("peerListUpdated");
         for(Map.Entry<String, Peer> entry : e.getPeers().entrySet()){
-            System.out.println("  > " + entry.getValue().getName() + "");
+            System.out.println("  " + entry.getValue().getName() + 
+                    "(" + entry.getValue().getPeerVolatileData().getStatus() + ")");
         }
         synchronized(this){
             notify();
@@ -239,6 +240,12 @@ public class FreenetClientTest extends TestCase
         synchronized(this){
             notify();
         }
+    }
+
+    public static Test suite() {
+        TestSuite suite = new TestSuite(FreenetClientTest.class);
+        
+        return suite;
     }
     
 }

@@ -18,7 +18,7 @@ public class GenerateSSK extends ClientMessage{
         setId(id);
     }
     
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
     }
     
     public String getId() {

@@ -7,8 +7,8 @@ package org.freenet.contrib.fcp.message.node;
 import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 
 /**
- *
- * @author res
+ *This indicates a successful fetch of the key, but does not actually include the data.
+ * @author Ralph Smithen
  */
 public class DataFound extends NodeMessage{
 
@@ -16,7 +16,10 @@ public class DataFound extends NodeMessage{
     public DataFound() {
     }
     
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    /**
+     * @inheritDoc 
+     */
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getQueueEventSupport().fireDataFound(this);
     }
 
@@ -42,5 +45,9 @@ public class DataFound extends NodeMessage{
 
     public void setDataLength(int dataLength) {
         _fields.put("ContentType", String.valueOf(dataLength));
+    }
+    
+    public boolean isGlobal() {
+        return Boolean.parseBoolean(_fields.get("Global"));
     }
 }

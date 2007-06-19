@@ -10,17 +10,22 @@ import org.freenet.contrib.fcp.message.Persistence;
 import org.freenet.contrib.fcp.message.UploadFrom;
 
 /**
- * <p>This is used to specify an insert into Freenet of a single file. 
- * The insert may be provided by referring to a file on disk, including the data directly, 
- * or redirecting to another key.</p>
- * <p>A filename may be specified using the TargetFilename option. This is mostly useful 
- * with CHKs. The effect is to create a single file manifest which contains only the filename 
- * given, and points to the data just inserted. Thus the provided filename becomes the last 
- * part of the URI, and must be provided when fetching the data.</p>
+ * <p>This inserts an entire on-disk directory (including subdirectories) under a single key (technically, 
+ * as a manifest file).  Each of the inserted files is located using the same key like this:</p>
+ *<pre>
+ *CHK@NOSdw7FF88S....4BgOPxSPqv~bNg7YsgM,AAEC--8/file1.txt
+ *CHK@NOSdw7FF88S....4BgOPxSPqv~bNg7YsgM,AAEC--8/file2.jpg
+ *CHK@NOSdw7FF88S....4BgOPxSPqv~bNg7YsgM,AAEC--8/subdir/file3.html
+ *CHK@NOSdw7FF88S....4BgOPxSPqv~bNg7YsgM,AAEC--8/subdir/file4.ogg
+ *CHK@NOSdw7FF88S....4BgOPxSPqv~bNg7YsgM,AAEC--8/foo/bar/file5.pdf
+ *</pre>
+ *
+ *
+ *<p>Most of the fields have the same usage as in {@link ClientPut ClientPut}.</p>
  *
  * @author Ralph Smithen
  */
-public class ClientPut extends ClientMessage implements DataHoldingMessage{
+public class ClientPutDiskDir extends ClientMessage{
     private byte[] _data;
     private static String[] _mandatoryFields;
        
@@ -31,11 +36,9 @@ public class ClientPut extends ClientMessage implements DataHoldingMessage{
      * @param id 
      * @param data 
      */
-    public ClientPut(String uri, String id, byte[] data){
+    public ClientPutDiskDir(String uri, String id, byte[] data){
         setUri(uri);
         setId(id);
-        setData(data);
-        setUploadFrom(UploadFrom.direct);
     }
     
     /**
@@ -187,42 +190,6 @@ public class ClientPut extends ClientMessage implements DataHoldingMessage{
     public void setDontCompress(boolean dontCompress) {
         _fields.put("DontCompress", String.valueOf(dontCompress));
     }
-    
-    public boolean isBlob() {
-        return Boolean.parseBoolean(_fields.get("BinaryBlob"));
-    }
-    
-    public void setBlob(boolean blob) {
-        _fields.put("BinaryBlob", String.valueOf(blob));
-    }
-    
-    public boolean isEarlyEncode() {
-        return Boolean.parseBoolean(_fields.get("EarlyEncode"));
-    }
-    
-    public void setEarlyEncode(boolean earlyEncode) {
-        _fields.put("EarlyEncode", String.valueOf(earlyEncode));
-    }
-    
-    public UploadFrom getUploadFrom() {
-        return UploadFrom.valueOf(_fields.get("UploadFrom"));
-    }
-    
-    public void setUploadFrom(UploadFrom uploadFrom) {
-        _fields.put("UploadFrom", uploadFrom.toString());
-        switch(uploadFrom){
-            case direct:
-                _mandatoryFields = new String[] {"URI", "Identifier", "DataLength"};
-                break;
-                
-            case disk: 
-                _mandatoryFields = new String[] {"URI", "Identifier", "Filename"};
-                break;
-                
-            case redirect:
-                _mandatoryFields = new String[] {"URI", "Identifier", "TargetURI"};
-        }
-    }
 
     public String getFileName() {
         return _fields.get("FileName");
@@ -232,36 +199,20 @@ public class ClientPut extends ClientMessage implements DataHoldingMessage{
         _fields.put("FileName", fileName);
     }
     
-    public String getTargetFilename() {
-        return _fields.get("TargetFilename");
+    public String getDefaultName() {
+        return _fields.get("DefaultName");
     }
     
-    public void setTargetFilename(String targetFilename) {
-        _fields.put("TargetFilename", targetFilename);
+    public void setDefaultName(String defaultName) {
+        _fields.put("DefaultName", defaultName);
     }
     
-    public String getTargetURI() {
-        return _fields.get("TargetURI");
-    }
-    
-    public void setTargetURI(String targetURI) {
-        _fields.put("TargetURI", targetURI);
-    }
 
-    public byte[] getData() {
-        return _data;
-    }
-
-    public void setData(byte[] data) {
-        _data = data;
-        setDataLength(data.length);
+    public void setAllowUnreadableFiles(boolean b) {
+        _fields.put("AllowUnreadableFiles", String.valueOf(b));
     }
     
-    public int getDataLength() {
-        return Integer.parseInt(_fields.get("DataLength"));
-    }
-    
-    public void setDataLength(int dataLength) {
-        _fields.put("DataLength", String.valueOf(dataLength));
+    public boolean isAllowUnreadableFiles() {
+        return Boolean.parseBoolean(_fields.get("AllowUnreadableFiles"));
     }
 }

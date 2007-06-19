@@ -10,10 +10,11 @@ import org.freenet.contrib.fcp.event.support.FcpEventSupportRepository;
 import org.freenet.contrib.fcp.message.DataHoldingMessage;
 
 /**
- *For a ClientGet with ReturnType=direct, the data is returned directly to the client, 
- * all at once, using the AllData message. Obviously in many situations this will not be desirable, 
- * hence the other ReturnType options. Persistent direct requests will not send this 
- * immediately on completion of the request; see GetRequestStatus.
+ * For a ClientGet with ReturnType=direct, the data is returned directly to the client, 
+ * all at once, using the <code>AllData</code> message. Obviously in many situations this 
+ * will not be desirable, hence the other {@link org.freenet.contrib.fcp.message.ReturnType ReturnType} options. 
+ * Persistent direct requests will not send this immediately on completion of the request; 
+ * see {@link GetRequestStatus GetRequestStatus}.
  *
  * @author Ralph Smithen
  */
@@ -29,10 +30,9 @@ public class AllData extends NodeMessage implements DataHoldingMessage{
     
 
     /**
-     * 
      * @inheritDoc 
      */
-    public void fireEvents(FcpEventSupportRepository eventSupport) {
+    protected void fireEvents(FcpEventSupportRepository eventSupport) {
         eventSupport.getQueueEventSupport().fireAllData(this);
     }
     

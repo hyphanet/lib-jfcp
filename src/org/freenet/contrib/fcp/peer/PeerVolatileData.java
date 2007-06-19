@@ -2,29 +2,18 @@
  * Public License, version 2 (or at your option any later version). See
  * http://www.gnu.org/ for further details of the GPL. */
 
-package org.freenet.contrib.fcp.message.node;
+package org.freenet.contrib.fcp.peer;
+
+import java.util.Map;
+import org.freenet.contrib.fcp.message.node.*;
 
 /**
- *
- * @author res
+ * Helper class for {@link org.freenet.contrib.fcp.message.node.Peer Peer}.
+ * @author Ralph Smithen
  */
 public class PeerVolatileData {
-    private Peer _p;
-    
-    public enum Status{
-        CONNECTED,
-        DISCONNECTED,
-        BACKED_OFF,
-        TOO_OLD,
-        NEVER_CONNECTED
-    }
-    
-    public enum LastRoutingBackoffReason{
-        AcceptedTimeout,
-        FatalTimeout,
-        ForwardRejectedOverload,
-        ForwardRejectedOverload2
-    }
+    private Map<String, String> _fields;
+
     
 //        volatile.averagePingTime=1.0
 //        volatile.overloadProbability=0.0
@@ -66,97 +55,94 @@ public class PeerVolatileData {
     
     /** Creates a new instance of PeerVolatileData */
     public PeerVolatileData(Peer p) {
-        _p = p;
+        _fields = p.getFields();
     }
 
     public float getAveragePingTime() {
-        return Float.parseFloat(_p.getFields().get("volatile.averagePingTime"));
+        return Float.parseFloat(_fields.get("volatile.averagePingTime"));
     }
 
     public void setAveragePingTime(float averagePingTime) {
-         _p.getFields().put("volatile.averagePingTime", String.valueOf(averagePingTime));
+         _fields.put("volatile.averagePingTime", String.valueOf(averagePingTime));
     }
 
     public float getOverloadProbability() {
-        return Float.parseFloat(_p.getFields().get("volatile.overloadProbability"));
+        return Float.parseFloat(_fields.get("volatile.overloadProbability"));
     }
 
     public void setOverloadProbability(float overloadProbability) {
-         _p.getFields().put("volatile.overloadProbability", String.valueOf(overloadProbability));
+         _fields.put("volatile.overloadProbability", String.valueOf(overloadProbability));
     }
 
     public int getIdle() {
-        return Integer.parseInt(_p.getFields().get("volatile.idle"));
+        return Integer.parseInt(_fields.get("volatile.idle"));
     }
 
     public void setIdle(int idle) {
-         _p.getFields().put("volatile.idle", String.valueOf(idle));
+         _fields.put("volatile.idle", String.valueOf(idle));
     }
 
     public float getPercentTimeRoutableConnection() {
-        return Float.parseFloat(_p.getFields().get("volatile.percentTimeRoutableConnection"));
+        return Float.parseFloat(_fields.get("volatile.percentTimeRoutableConnection"));
     }
 
     public void setPercentTimeRoutableConnection(float percentTimeRoutableConnection) {
-         _p.getFields().put("volatile.percentTimeRoutableConnection", String.valueOf(percentTimeRoutableConnection));
+         _fields.put("volatile.percentTimeRoutableConnection", String.valueOf(percentTimeRoutableConnection));
     }
 
     public float getRoutingBackoffPercent() {
-        return Float.parseFloat(_p.getFields().get("volatile.routingBackoffPercent"));
+        return Float.parseFloat(_fields.get("volatile.routingBackoffPercent"));
     }
 
     public void setRoutingBackoffPercent(float routingBackoffPercent) {
-         _p.getFields().put("volatile.routingBackoffPercent", String.valueOf(routingBackoffPercent));
+         _fields.put("volatile.routingBackoffPercent", String.valueOf(routingBackoffPercent));
     }
 
     public Status getStatus() {
-        return Status.valueOf(_p.getFields().get("volatile.status").replace(' ', '_'));
+        return Status.valueOf(_fields.get("volatile.status").replace(' ', '_'));
     }
 
     public void setStatus(Status status) {
-        _p.getFields().put("volatile.status", status.toString().replace('_', ' '));
+        _fields.put("volatile.status", status.toString().replace('_', ' '));
     }
 
     public long getTotalBytesIn() {
-        return Long.parseLong(_p.getFields().get("volatile.totalBytesIn"));
+        return Long.parseLong(_fields.get("volatile.totalBytesIn"));
     }
 
     public void setTotalBytesIn(long totalBytesIn) {
-        _p.getFields().put("volatile.totalBytesIn", String.valueOf(totalBytesIn));
+        _fields.put("volatile.totalBytesIn", String.valueOf(totalBytesIn));
     }
 
     public long getRoutingBackoffLength() {
-        return Long.parseLong(_p.getFields().get("volatile.routingBackoffLength"));
+        return Long.parseLong(_fields.get("volatile.routingBackoffLength"));
     }
 
     public void setRoutingBackoffLength(long routingBackoffLength) {
-        _p.getFields().put("volatile.routingBackoffLength", String.valueOf(routingBackoffLength));
+        _fields.put("volatile.routingBackoffLength", String.valueOf(routingBackoffLength));
     }
 
     public LastRoutingBackoffReason getLastRoutingBackoffReason() {
-        return LastRoutingBackoffReason.valueOf(_p.getFields().get("volatile.lastRoutingBackoffReason"));
+        return LastRoutingBackoffReason.valueOf(_fields.get("volatile.lastRoutingBackoffReason"));
     }
 
     public void setLastRoutingBackoffReason(LastRoutingBackoffReason lastRoutingBackoffReason) {
-        _p.getFields().put("volatile.lastRoutingBackoffReason", lastRoutingBackoffReason.toString());
+        _fields.put("volatile.lastRoutingBackoffReason", lastRoutingBackoffReason.toString());
     }
 
     public long getRoutingBackoff() {
-        return Long.parseLong(_p.getFields().get("volatile.routingBackoff"));
+        return Long.parseLong(_fields.get("volatile.routingBackoff"));
     }
 
     public void setRoutingBackoff(long routingBackoff) {
-        _p.getFields().put("volatile.routingBackoff", String.valueOf(routingBackoff));
+        _fields.put("volatile.routingBackoff", String.valueOf(routingBackoff));
     }
 
     public long getTotalBytesOut() {
-        return Long.parseLong(_p.getFields().get("volatile.totalBytesOut"));
+        return Long.parseLong(_fields.get("volatile.totalBytesOut"));
     }
 
     public void setTotalBytesOut(long totalBytesOut) {
-        _p.getFields().put("volatile.totalBytesOut", String.valueOf(totalBytesOut));
+        _fields.put("volatile.totalBytesOut", String.valueOf(totalBytesOut));
     }
-    
-    
-    
 }
